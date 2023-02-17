@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "session-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "session.App",
+            "projectName": "session-ms"
+        },
+        {
+            "type": "java",
+            "name": "account-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "account.App",
+            "projectName": "account-ms"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "All services",
+            "configurations": ["session-ms","account-ms"]
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group='apicontracts'
+version='1.0.0'
+sourceCompatibility=17
+targetCompatibility=17
+
+sourceSets {
+    main.java.srcDirs = ['src']
+    main.resources.srcDirs = ['src-resource']
+    test.java.srcDirs = ['tst']
+    test.resources.srcDirs = ['tst-resource']
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+}
+
+test {
+    testLogging.events = ['passed', 'skipped', 'failed']
+    useJUnitPlatform()
+}

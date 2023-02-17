@@ -1,0 +1,8 @@
+
+/* ======= CORE-COMMON PROJECTS ========= */
+include ':api-core'; project(':api-core').projectDir = new File('core/api-core')
+include ':api-contracts'; project(':api-contracts').projectDir = new File('core/api-contracts')
+
+/* ======= MICROSERVICE PROJECTS ========= */
+include ':session-ms'; project(':session-ms').projectDir = new File('microservices/session-ms')
+include ':account-ms'; project(':account-ms').projectDir = new File('microservices/account-ms')

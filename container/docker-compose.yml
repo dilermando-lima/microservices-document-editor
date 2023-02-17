@@ -1,0 +1,85 @@
+
+version: "3.9"
+
+# docker-compose --env-file ./env/env.dev --file ./container/docker-compose.yml up -d
+# docker-compose --env-file ./env/env.dev --file ./container/docker-compose.yml down --remove-orphans
+
+services:
+  core_parent_with_gradle:
+    image: core_parent_with_gradle
+    build:
+      context: ../
+      dockerfile: container/core-parent-image.Dockerfile
+
+  db_mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${LOCAL_SPRING_DATA_MONGODB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${LOCAL_SPRING_DATA_MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${LOCAL_SPRING_DATA_MONGODB_DATABASE}
+    ports:
+      - 27017:${LOCAL_SPRING_DATA_MONGODB_PORT}
+
+  ms_account:
+    container_name: ms_account_container
+    image: ms_account
+    depends_on: 
+      - core_parent_with_gradle
+    links:
+      - db_mongo:local.mongo
+    build:
+      context: ../
+      dockerfile: container/microservices.Dockerfile
+      args:
+        NAME_PROJECT: account-ms
+        SOURCE_APP_PATH: microservices/account-ms
+        PORT_APP: ${ACCOUNT_SERVER_PORT}
+        JVM_ARGS: -Xmx150M -Xms60M
+    environment:
+      ACCOUNT_SERVER_PORT: ${ACCOUNT_SERVER_PORT}
+      SECRET_JWT: ${SECRET_JWT}
+      LOGGING_LEVEL_APICORE_INTEGRATION: ${LOGGING_LEVEL_APICORE_INTEGRATION}
+      LOGGING_LEVEL_ACCOUNT: ${LOGGING_LEVEL_ACCOUNT}
+      LOGGING_PATTERN_CONSOLE: ${LOGGING_PATTERN_CONSOLE}
+      ACCOUNT_SPRING_DATA_MONGODB_HOST: local.mongo
+      ACCOUNT_SPRING_DATA_MONGODB_PORT: ${ACCOUNT_SPRING_DATA_MONGODB_PORT}
+      ACCOUNT_SPRING_DATA_MONGODB_DATABASE: ${ACCOUNT_SPRING_DATA_MONGODB_DATABASE}
+      ACCOUNT_SPRING_DATA_MONGODB_USERNAME: ${ACCOUNT_SPRING_DATA_MONGODB_USERNAME}
+      ACCOUNT_SPRING_DATA_MONGODB_PASSWORD: ${ACCOUNT_SPRING_DATA_MONGODB_PASSWORD}
+      ACCOUNT_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: ${ACCOUNT_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE}
+    ports:
+      - ${ACCOUNT_SERVER_PORT}:${ACCOUNT_SERVER_PORT}
+
+  ms_session:
+      container_name: ms_session_container
+      image: ms_session
+      depends_on: 
+        - core_parent_with_gradle
+      links:
+        - db_mongo:local.mongo
+        - ms_account:localhost.account
+      build:
+        context: ../
+        dockerfile: container/microservices.Dockerfile
+        args:
+          NAME_PROJECT: session-ms
+          SOURCE_APP_PATH: microservices/session-ms
+          PORT_APP: ${SESSION_SERVER_PORT}
+          JVM_ARGS: -Xmx150M -Xms60M
+      environment:
+        SESSION_SERVER_PORT: ${SESSION_SERVER_PORT}
+        ACCOUNT_MS_ENDPOINT: http://localhost.account:${ACCOUNT_SERVER_PORT}
+        SECRET_JWT: ${SECRET_JWT}
+        LOGGING_LEVEL_APICORE_INTEGRATION: ${LOGGING_LEVEL_APICORE_INTEGRATION}
+        LOGGING_LEVEL_SESSION: ${LOGGING_LEVEL_SESSION}
+        LOGGING_PATTERN_CONSOLE: ${LOGGING_PATTERN_CONSOLE}
+        SESSION_SPRING_DATA_MONGODB_HOST: local.mongo
+        SESSION_SPRING_DATA_MONGODB_PORT: ${SESSION_SPRING_DATA_MONGODB_PORT}
+        SESSION_SPRING_DATA_MONGODB_DATABASE: ${SESSION_SPRING_DATA_MONGODB_DATABASE}
+        SESSION_SPRING_DATA_MONGODB_USERNAME: ${SESSION_SPRING_DATA_MONGODB_USERNAME}
+        SESSION_SPRING_DATA_MONGODB_PASSWORD: ${SESSION_SPRING_DATA_MONGODB_PASSWORD}
+        SESSION_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: ${SESSION_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE}
+      ports:
+        - ${SESSION_SERVER_PORT}:${SESSION_SERVER_PORT}
+
+  
