@@ -18,17 +18,6 @@ public class PropertiesDefault extends PropertySourcesPlaceholderConfigurer {
 
         var properties = new Properties();
 
-        // appliaction server
-        properties.setProperty("server.port", "${${spring.application.name}.server.port}");
-
-        // database connection
-        properties.setProperty("spring.data.mongodb.host", "${${spring.application.name}.spring.data.mongodb.host}");
-        properties.setProperty("spring.data.mongodb.port", "${${spring.application.name}.spring.data.mongodb.port}");
-        properties.setProperty("spring.data.mongodb.database", "${${spring.application.name}.spring.data.mongodb.database}");
-        properties.setProperty("spring.data.mongodb.username", "${${spring.application.name}.spring.data.mongodb.username}");
-        properties.setProperty("spring.data.mongodb.password", "${${spring.application.name}.spring.data.mongodb.password}");
-        properties.setProperty("spring.data.mongodb.authentication-database", "${${spring.application.name}.spring.data.mongodb.authentication-database}");
-
         // handle 404 mapping response
         properties.setProperty("spring.mvc.throw-exception-if-no-handler-found","true");
         properties.setProperty("spring.web.resources.add-mappings","false");
@@ -37,6 +26,12 @@ public class PropertiesDefault extends PropertySourcesPlaceholderConfigurer {
         properties.setProperty("springdoc.swagger-ui.path", PREFIX_SWAGGER_PATH);
         properties.setProperty("springdoc.api-docs.path", PREFIX_SWAGGER_PATH + "/api-docs");
 
+
+        for (String propApp : PropertiesAppRegister.propAppArray()) {
+            //eg.  properties.setProperty("server.port", "${nameapp.server.port}")
+            properties.setProperty(propApp, "${%s.%s}".formatted(PropertiesAppRegister.prefix(), propApp));
+        }
+    
         return properties;
 
     }

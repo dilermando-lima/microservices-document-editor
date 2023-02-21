@@ -8,7 +8,7 @@ repositories {
 	mavenCentral() 
 }
 
-group='account'
+group=''
 version='1.0.0'
 sourceCompatibility=17
 targetCompatibility=17

@@ -5,12 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
-import apicontracts.dto.AccountMS;
-import apicontracts.dto.AccountMS.GetAccountByNameResponse;
-import apicontracts.dto.SessionMS.LoginSessionRequest;
-import apicontracts.dto.SessionMS.LoginSessionResponse;
+import apicontracts.account.GetAccountByNameContract;
+import apicontracts.session.LoginSessionContract;
 import apicore.access.JwtUtils;
 import apicore.access.SessionRequest;
 import apicore.exception.Throw;
@@ -19,8 +17,8 @@ import apicore.repository.MongoRepository;
 import session.model.Session;
 
 
-@Service
-public class LoginSessionService {
+@RestController
+public class LoginSessionService implements LoginSessionContract{
 
     private static Logger logger = LoggerFactory.getLogger(LoginSessionService.class);
 
@@ -30,10 +28,11 @@ public class LoginSessionService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    @Value(AccountMS.ENDPOINT_ENV + AccountMS.PREFIX_CONTROLLER + AccountMS.PATH_GET_BY_NAME)
+    @Value(GetAccountByNameContract.URI)
     private String urlApiGetAccountByName;
     
-    public LoginSessionResponse login(LoginSessionRequest request){
+    @Override
+    public ResponseLoginSession login(RequestLoginSession request){
         logger.info("login() : request = {}", request);
         validateRequest(request);
 
@@ -46,10 +45,10 @@ public class LoginSessionService {
     }
 
 
-    private GetAccountByNameResponse consumeApiGetAccountByName(String name){
+    private GetAccountByNameContract.ResponseGetAccountByName consumeApiGetAccountByName(String name){
         logger.debug("consumeApiGetAccountByName() : urlApiGetAccountByName = {} , name = {}", urlApiGetAccountByName , name);
         return RestClient
-                .get(urlApiGetAccountByName, GetAccountByNameResponse.class)
+                .get(urlApiGetAccountByName, GetAccountByNameContract.ResponseGetAccountByName.class)
                 .requestUriValue(name)
                 .onError404(err -> {
                     Throw.any(logger, HttpStatus.NOT_FOUND, "account with name '%s' has not been found".formatted(name));
@@ -61,7 +60,7 @@ public class LoginSessionService {
 
     public record GetByIdResponse(String name, String id) {}
 
-    private Session convertAccountResponseToEntity(GetAccountByNameResponse accountResponse ){
+    private Session convertAccountResponseToEntity(GetAccountByNameContract.ResponseGetAccountByName accountResponse ){
         logger.debug("convertRequestToEntity() : accountResponse = {}", accountResponse);
         return new Session(accountResponse.id(), accountResponse.name());
     }
@@ -71,9 +70,9 @@ public class LoginSessionService {
         return repository.insert(session);
     }
 
-    private LoginSessionResponse convertSessionToResponse(Session session){
+    private ResponseLoginSession convertSessionToResponse(Session session){
         logger.debug("convertSessionToResponse() : session = {} ", session);
-        return new LoginSessionResponse( 
+        return new ResponseLoginSession( 
             jwtUtils.tokenize(
                 new SessionRequest(
                     session.getId(), 
@@ -85,7 +84,7 @@ public class LoginSessionService {
          );
     }
 
-    private void validateRequest(LoginSessionRequest request) {
+    private void validateRequest(RequestLoginSession request) {
         logger.debug("validateRequest() : request = {}", request);
         Throw.badRequest(logger,"request cannot be empty", request == null);
         Throw.badRequest(logger,"accountName cannot be empty", request.accountName() == null || request.accountName().isBlank());

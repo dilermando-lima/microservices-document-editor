@@ -3,22 +3,22 @@ package account.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import account.model.Account;
-import apicontracts.dto.AccountMS.CreateAccountRequest;
-import apicontracts.dto.AccountMS.CreateAccountResponse;
+import apicontracts.account.CreateAccountContract;
 import apicore.exception.Throw;
 import apicore.repository.MongoRepository;
 
-@Service
-public class CreateAccountService {
+@RestController
+public class CreateAccountService implements CreateAccountContract {
 
     private static Logger logger = LoggerFactory.getLogger(CreateAccountService.class);
 
     @Autowired private MongoRepository repository;
 
-    public CreateAccountResponse create(CreateAccountRequest request){
+    @Override
+    public ResponseCreateAccount create(RequestCreateAccount request) {
         logger.info("create() : request = {}", request);
         validateRequest(request);
 
@@ -32,7 +32,7 @@ public class CreateAccountService {
         return response;
     }
 
-    private void validateRequest(CreateAccountRequest request) {
+    private void validateRequest(RequestCreateAccount request) {
         logger.debug("validateRequest() : request = {}", request);
 
         Throw.badRequest(logger, "request cannot be empty",             request == null);
@@ -54,14 +54,16 @@ public class CreateAccountService {
         return repository.insert(entity);
     }
 
-    private CreateAccountResponse convertEntityToResponse(Account entity) {
+    private ResponseCreateAccount convertEntityToResponse(Account entity) {
         logger.debug("convertEntityToResponse() : entity = {}", entity);
-        return new CreateAccountResponse(entity.getId(), entity.getName());
+        return new ResponseCreateAccount(entity.getId(), entity.getName());
     }
 
-    private Account convertRequestToEntity(CreateAccountRequest request) {
+    private Account convertRequestToEntity(RequestCreateAccount request) {
         logger.debug("convertRequestToEntity() : request = {}", request);
         return new Account(request.name());
     }
+
+
 
 }

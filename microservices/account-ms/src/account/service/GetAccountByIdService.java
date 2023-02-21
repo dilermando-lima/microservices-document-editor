@@ -3,21 +3,22 @@ package account.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
 import account.model.Account;
-import apicontracts.dto.AccountMS.GetAccountByIdResponse;
+import apicontracts.account.GetAccountByIdContract;
 import apicore.exception.Throw;
 import apicore.repository.MongoRepository;
 
-@Service
-public class GetAccountByIdService {
+@RestController
+public class GetAccountByIdService implements GetAccountByIdContract {
 
     private static Logger logger = LoggerFactory.getLogger(GetAccountByIdService.class);
 
     @Autowired private MongoRepository repository;
 
-    public GetAccountByIdResponse getById(String id){
+    @Override
+    public ResponseGetAccountById getById(String id){
         logger.info("getById() : request = {}", id);
         validateRequest(id);
 
@@ -48,9 +49,9 @@ public class GetAccountByIdService {
         Throw.notFound(logger,"Account has not been found", entity == null);
     }
 
-    private GetAccountByIdResponse convertEntityToResponse(Account entity) {
+    private ResponseGetAccountById convertEntityToResponse(Account entity) {
         logger.debug("convertEntityToResponse() : entity = {}", entity);
-        return new GetAccountByIdResponse(entity.getId(), entity.getName());
+        return new ResponseGetAccountById(entity.getId(), entity.getName());
     }
 
 }

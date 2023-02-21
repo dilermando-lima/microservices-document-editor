@@ -2,6 +2,7 @@
 version: "3.9"
 
 # docker-compose --env-file ./env/env.dev --file ./container/docker-compose.yml up -d
+# docker-compose --env-file ./env/env.dev --file ./container/docker-compose.yml up -d db_mongo
 # docker-compose --env-file ./env/env.dev --file ./container/docker-compose.yml down --remove-orphans
 
 services:

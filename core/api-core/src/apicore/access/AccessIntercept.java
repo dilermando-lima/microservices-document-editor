@@ -27,26 +27,26 @@ public class AccessIntercept  implements HandlerInterceptor{
         
         if (handler instanceof HandlerMethod) {
             HandlerMethod method = (HandlerMethod) handler;	
-   
-            if(method.getMethod().isAnnotationPresent(AccessType.class) ){
-                logger.debug("preHandle() : AccessType = {} ", method.getMethod().getAnnotation(AccessType.class).value());
 
-                if(AccessType.PUBLIC.equals(method.getMethod().getAnnotation(AccessType.class).value())){
+            var accessType = method.getMethodAnnotation(AccessType.class);
+   
+            if( accessType != null){
+                logger.debug("preHandle() : AccessType = {} ", accessType.value());
+
+                if(AccessType.PUBLIC.equals(accessType.value())){
                     refreshMetadaRequest(method , request);
 
-                }else if(AccessType.PRIVATE_JWT.equals(method.getMethod().getAnnotation(AccessType.class).value())){
+                }else if(AccessType.PRIVATE_JWT.equals(accessType.value())){
                     refreshMetadaRequest(method , request);
                     refreshSessionRequest(request);
 
-                }else if(AccessType.PRIVATE_JWT_FORCE_CHECKING.equals(method.getMethod().getAnnotation(AccessType.class).value())){
+                }else if(AccessType.PRIVATE_JWT_FORCE_CHECKING.equals(accessType.value())){
                     refreshMetadaRequest(method , request);
                     refreshSessionRequest(request);
                     forceSessionChecking(sessionRequest);
-
                 }
 
-                
-            }else if( !method.getMethod().isAnnotationPresent(AccessType.class) && !(method instanceof ErrorController) ) {      
+            }else if( accessType == null && !(method instanceof ErrorController) ) {      
                 Throw.any(logger, HttpStatus.INTERNAL_SERVER_ERROR,"All endpoint need to have %s annotation".formatted(AccessType.class.getName()) ); 
             }
         

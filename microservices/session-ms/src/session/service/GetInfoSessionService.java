@@ -3,23 +3,24 @@ package session.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
-import apicontracts.dto.SessionMS.GetInfoSessionResponse;
+import apicontracts.session.GetInfoSessionContract;
 import apicore.access.SessionRequest;
 import apicore.exception.Throw;
 import apicore.repository.MongoRepository;
 import session.model.Session;
 
-@Service
-public class GetInfoSessionService {
+@RestController
+public class GetInfoSessionService implements GetInfoSessionContract {
 
     private static Logger logger = LoggerFactory.getLogger(GetInfoSessionService.class);
 
     @Autowired private MongoRepository repository;
     @Autowired private SessionRequest sessionRequest;
 
-    public GetInfoSessionResponse getInfo(){
+    @Override
+    public ResponseGetInfoSession getInfo(){
         logger.info("getInfo() : sessionRequest.getIdSession = {}", sessionRequest.getIdSession());
         validateRequest(sessionRequest.getIdSession());
 
@@ -44,9 +45,9 @@ public class GetInfoSessionService {
         return repository.getOneById(id, Session.class);
     }
 
-    private GetInfoSessionResponse convertEntityToResponse(Session entity) {
+    private ResponseGetInfoSession convertEntityToResponse(Session entity) {
         logger.debug("convertEntityToResponse() : entity = {}", entity);
-        return new GetInfoSessionResponse(entity.getId(), entity.getAccountId(), entity.getAccountName() );
+        return new ResponseGetInfoSession(entity.getId(), entity.getAccountId(), entity.getAccountName() );
     }
 
     private void validateRequest(String id) {

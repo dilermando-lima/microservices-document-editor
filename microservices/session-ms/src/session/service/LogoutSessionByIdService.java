@@ -3,22 +3,24 @@ package session.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
 
+import apicontracts.session.LogoutSessionContract;
 import apicore.access.SessionRequest;
 import apicore.exception.Throw;
 import apicore.repository.MongoRepository;
 import session.model.Session;
 
-@Service
-public class LogoutSessionByIdService {
+@RestController
+public class LogoutSessionByIdService implements LogoutSessionContract {
 
     private static Logger logger = LoggerFactory.getLogger(LogoutSessionByIdService.class);
 
     @Autowired private MongoRepository repository;
     @Autowired private SessionRequest sessionRequest;
 
-    public void logoutById(){
+    @Override
+    public void logout(){
         logger.info("logoutById() : sessionRequest.getIdSession = {}", sessionRequest.getIdSession());
         validateRequest(sessionRequest.getIdSession());
         deleteByIdFromDatabase(sessionRequest.getIdSession());
