@@ -18,6 +18,10 @@ public class PropertiesDefault extends PropertySourcesPlaceholderConfigurer {
 
         var properties = new Properties();
 
+        // disable spring aop
+        properties.setProperty("spring.aop.auto","false");
+        properties.setProperty("spring.aop.proxy-target-class","false");
+
         // handle 404 mapping response
         properties.setProperty("spring.mvc.throw-exception-if-no-handler-found","true");
         properties.setProperty("spring.web.resources.add-mappings","false");
