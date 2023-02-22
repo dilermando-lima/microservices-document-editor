@@ -9,7 +9,7 @@ repositories {
 }
 
 group=''
-version="${versionMsAccount}"
+version="${versionMsContentAddEvent}"
 sourceCompatibility=17
 targetCompatibility=17
 

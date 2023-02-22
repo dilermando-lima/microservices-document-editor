@@ -1,0 +1,30 @@
+package apicontracts.documentdraft;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import apicore.access.AccessType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name =  "document")
+public interface CreateDraftDocumentContract {
+
+    public final String ENDPOINT = "${document.draft.ms.endpoint}";
+    public final String PREFIX = "/document";
+    public final String PATH = "/draft/{idDocument}";
+    public final String URI = ENDPOINT + PREFIX + PATH;
+    public final RequestMethod REQUEST_METHOD = RequestMethod.POST;
+
+    public record ResponseCreateDraftDocument(String idVersion){}
+
+    @AccessType(AccessType.PRIVATE_JWT)
+    @Operation(summary = "Create a new version from a document as a draft to be edited")
+    @RequestMapping(path = PREFIX + PATH, method = RequestMethod.POST)
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public abstract ResponseCreateDraftDocument createDraft(@PathVariable(name = "idDocument") String idDocument);
+    
+}

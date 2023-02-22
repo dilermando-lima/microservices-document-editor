@@ -4,5 +4,11 @@ include ':api-core'; project(':api-core').projectDir = new File('core/api-core')
 include ':api-contracts'; project(':api-contracts').projectDir = new File('core/api-contracts')
 
 /* ======= MICROSERVICE PROJECTS ========= */
-include ':session-ms'; project(':session-ms').projectDir = new File('microservices/session-ms')
 include ':account-ms'; project(':account-ms').projectDir = new File('microservices/account-ms')
+include ':content-add-event-ms'; project(':content-add-event-ms').projectDir = new File('microservices/content-add-event-ms')
+include ':content-on-hot-event-ms'; project(':content-on-hot-event-ms').projectDir = new File('microservices/content-on-hot-event-ms')
+include ':document-draft-ms'; project(':document-draft-ms').projectDir = new File('microservices/document-draft-ms')
+include ':document-ms'; project(':document-ms').projectDir = new File('microservices/document-ms')
+include ':document-publish-ms'; project(':document-publish-ms').projectDir = new File('microservices/document-publish-ms')
+include ':session-ms'; project(':session-ms').projectDir = new File('microservices/session-ms')
+include ':storage-ms'; project(':storage-ms').projectDir = new File('microservices/storage-ms')

@@ -33,14 +33,32 @@ All microservices have their swagger doc at `http://localhost:{PORT}/swagger`
 │   ├── core-parent-image.Dockerfile
 │   ├── docker-compose.yml
 │   └── microservices.Dockerfile
-│
 ├── core
 │   ├── api-contracts/src/apicontracts
-│   │           └── dto
-│   │               ├── AccountMS.java
-│   │               └── SessionMS.java
-│   │
+│   │           │ 
+│   │           ├── account
+│   │           │   ├── CreateAccountContract.java
+│   │           │   ├── GetAccountByIdContract.java
+│   │           │   └── GetAccountByNameContract.java
+│   │           ├── contentaddevent
+│   │           │   └── AddEventContract.java
+│   │           ├── contentonhotevent
+│   │           │   └── GetAllEventAfterEventContract.java
+│   │           ├── document
+│   │           │   └── ListDocumentContract.java
+│   │           ├── documentdraft
+│   │           │   └── CreateDraftDocumentContract.java
+│   │           ├── documentpublish
+│   │           │   └── PublishDocumentContract.java
+│   │           ├── session
+│   │           │   ├── GetInfoSessionContract.java
+│   │           │   ├── LoginSessionContract.java
+│   │           │   └── LogoutSessionContract.java
+│   │           └── storage
+│   │               ├── GetContentFromStorageContract.java
+│   │               └── SaveContentIntoStorageContract.java
 │   └── api-core/src/apicore
+│               │
 │               ├── access
 │               │   ├── AccessIntercept.java
 │               │   ├── AccessType.java
@@ -49,6 +67,7 @@ All microservices have their swagger doc at `http://localhost:{PORT}/swagger`
 │               ├── config
 │               │   └── ConfigApi.java
 │               ├── environment
+│               │   ├── PropertiesAppRegister.java
 │               │   └── PropertiesDefault.java
 │               ├── exception
 │               │   ├── ApiException.java
@@ -58,29 +77,57 @@ All microservices have their swagger doc at `http://localhost:{PORT}/swagger`
 │               │   └── RestClient.java
 │               └── repository
 │                   └── MongoRepository.java
-│   
 └── microservices
     ├── account-ms/src/account
     │           ├── App.java
-    │           ├── controller
-    │           │   └── AccountController.java
     │           ├── model
     │           │   └── Account.java
     │           └── service
     │               ├── CreateAccountService.java
     │               ├── GetAccountByIdService.java
     │               └── GetAccountByNameService.java
+	│ 
+    ├── content-add-event-ms/src/contentaddevent
+    │           ├── App.java
+    │           ├── model
+    │           └── service
+    │               └── AddEventService.java
 	│
-    └── session-ms/src/session
+    ├── content-on-hot-event-ms/src/contentonhotevent
+    │           ├── App.java
+    │           ├── model
+    │           └── service
+    │               └── GetAllEventAfterEventService.java
+	│
+    ├── document-draft-ms/src/documentdraft
+    │           ├── App.java
+    │           └── service
+    │               └── CreateDraftDocumentService.java
+	│
+    ├── document-ms/src/document
+    │           ├── App.java
+    │           └── service
+    │               └── ListDocumentService.java
+	│
+    ├── document-publish-ms/src/documentpublish
+    │           ├── App.java
+    │           └── service
+    │               └── PublishDocumentService.java
+	│
+    ├── session-ms/src/session
+    │           ├── App.java
+    │           ├── model
+    │           │   └── Session.java
+    │           └── service
+    │               ├── GetInfoSessionService.java
+    │               ├── LoginSessionService.java
+    │               └── LogoutSessionByIdService.java
+	│
+    └── storage-ms/src/storage
                 ├── App.java
-                ├── controller
-                │   └── SessionController.java
-                ├── model
-                │   └── Session.java
                 └── service
-                    ├── GetInfoSessionService.java
-                    ├── LoginSessionService.java
-                    └── LogoutSessionByIdService.java
+                    ├── GetContentFromStorageService.java
+                    └── SaveContentIntoStorageService.java
 
 # tree -I bin -I build -I build.gradle -I src-resource -I settings.gradle -I gradle -I gradlew -I gradlew.bat -I README.md
 				

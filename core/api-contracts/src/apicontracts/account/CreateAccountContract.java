@@ -1,8 +1,10 @@
 package apicontracts.account;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import apicore.access.AccessType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ public interface CreateAccountContract {
     @AccessType(AccessType.PUBLIC)
     @Operation(summary = "Create new account")
     @RequestMapping(path = PREFIX + PATH, method = RequestMethod.POST)
+    @ResponseStatus(code = HttpStatus.CREATED)
     public abstract ResponseCreateAccount create(@RequestBody(required = false) RequestCreateAccount request);
     
 }

@@ -83,6 +83,33 @@ services:
       ports:
         - ${SESSION_SERVER_PORT}:${SESSION_SERVER_PORT}
 
-      
-
+  ms_content_add_event:
+      container_name: ms_content_add_event_container
+      image: ms_content_add_event
+      depends_on: 
+        - core_parent_with_gradle
+      links:
+        - db_mongo:local.mongo
+      build:
+        context: ../
+        dockerfile: container/microservices.Dockerfile
+        args:
+          NAME_PROJECT: content-add-event-ms
+          SOURCE_APP_PATH: microservices/content-add-event-ms
+          PORT_APP: ${CONTENT_ADD_EVENT_SERVER_PORT}
+          JVM_ARGS: -Xmx150M -Xms60M
+      environment:
+        CONTENT_ADD_EVENT_SERVER_PORT: ${CONTENT_ADD_EVENT_SERVER_PORT}
+        SECRET_JWT: ${SECRET_JWT}
+        LOGGING_LEVEL_APICORE_INTEGRATION: ${LOGGING_LEVEL_APICORE_INTEGRATION}
+        LOGGING_LEVEL_CONTENTADDEVENT: ${LOGGING_LEVEL_CONTENTADDEVENT}
+        LOGGING_PATTERN_CONSOLE: ${LOGGING_PATTERN_CONSOLE}
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_HOST: local.mongo
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_PORT: ${CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_PORT}
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_DATABASE: ${CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_DATABASE}
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_USERNAME: ${CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_USERNAME}
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_PASSWORD: ${CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_PASSWORD}
+        CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: ${CONTENT_ADD_EVENT_SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE}
+      ports:
+        - ${CONTENT_ADD_EVENT_SERVER_PORT}:${CONTENT_ADD_EVENT_SERVER_PORT}
   
