@@ -11,6 +11,7 @@ public class PropertiesDefault extends PropertySourcesPlaceholderConfigurer {
 
     public PropertiesDefault(){
         setIgnoreUnresolvablePlaceholders(true);
+        setOrder(HIGHEST_PRECEDENCE);
         setProperties(getDefaultProperties());
     }
 

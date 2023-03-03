@@ -19,21 +19,19 @@ public interface ListDocumentContract {
     public final String URI = ENDPOINT + PREFIX + PATH;
     public final RequestMethod REQUEST_METHOD = RequestMethod.GET;
 
-    public record RequestListDocument(
-        @RequestParam(name = "pageNum", required = false) int pageNum, 
-        @RequestParam(name = "pageSize", required = false) int pageSize
-    ){}
-
-    public record ItemVersionDocument(String idVersion, String status){}
-    public record ResponseListDocument(
+    public record ResponseVersion(String idVersion, String status){}
+    public record ResponseDocument(
         String idDocument,
         String title,
-        List<ItemVersionDocument> versions
+        List<ResponseVersion> versionList
     ){}
 
     @AccessType(AccessType.PRIVATE_JWT)
     @Operation(summary = "List all documents and their versions")
     @RequestMapping(path = PREFIX + PATH, method = RequestMethod.GET)
-    public abstract ResponseListDocument list(RequestListDocument request);
+    public abstract List<ResponseDocument> list(
+        @RequestParam(name = "pageNum", required = false) Integer pageNum,
+        @RequestParam(name = "pageSize", required = false) Integer pageSize
+    );
     
 }

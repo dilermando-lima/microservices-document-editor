@@ -3,7 +3,7 @@ package apicore.access;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -46,7 +46,7 @@ public class AccessIntercept  implements HandlerInterceptor{
                     forceSessionChecking(sessionRequest);
                 }
 
-            }else if( accessType == null && !(method instanceof ErrorController) ) {      
+            }else if( accessType == null && !method.getBeanType().equals(BasicErrorController.class) ){      
                 Throw.any(logger, HttpStatus.INTERNAL_SERVER_ERROR,"All endpoint need to have %s annotation".formatted(AccessType.class.getName()) ); 
             }
         

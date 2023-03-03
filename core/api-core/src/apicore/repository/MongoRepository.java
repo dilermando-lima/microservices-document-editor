@@ -1,11 +1,13 @@
 package apicore.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 
@@ -37,6 +39,22 @@ public class MongoRepository {
 
     public long removeById(String id, Class<?> entityClass){
         return removeOneByAttrEqual("id", id, entityClass);
+    }
+
+    public void pushBDrefObjectById(Class<?> typeContainsBDRef,String id, String attrName, Object objToAdd){
+        mongoTemplate
+            .update(typeContainsBDRef)
+            .matching(Criteria.where("id").is(id))
+            .apply(new Update().push(attrName, objToAdd));
+    }
+
+    public void alter(Class<?> objectToUpdate, String idObjectToUpdate, Map<String,Object> replacement){
+        var updateDefinition = new Update();
+        replacement.forEach( (k, v) -> updateDefinition.set(k, v));
+        mongoTemplate.findAndModify(
+                new Query(Criteria.where("id").is(idObjectToUpdate)), 
+                updateDefinition,
+                objectToUpdate);
     }
 
     public boolean existsByAttrEqual(String attrName, String valueToSearch, Class<?> entityClass){

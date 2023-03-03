@@ -18,11 +18,74 @@
             "mainClass": "account.App",
             "projectName": "account-ms"
         },
+        {
+            "type": "java",
+            "name": "content-add-event-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "contentaddevent.App",
+            "projectName": "content-add-event-ms"
+        },
+        {
+            "type": "java",
+            "name": "content-on-hot-event-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "contentonhotevent.App",
+            "projectName": "content-on-hot-event-ms"
+        },
+        {
+            "type": "java",
+            "name": "document-draft-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "documentdraft.App",
+            "projectName": "document-draft-ms"
+        },
+        {
+            "type": "java",
+            "name": "document-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "document.App",
+            "projectName": "document-ms"
+        },
+        {
+            "type": "java",
+            "name": "document-publish-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "documentpublish.App",
+            "projectName": "document-publish-ms"
+        },
+        {
+            "type": "java",
+            "name": "storage-ms",
+            "request": "launch",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/env/env.dev",
+            "mainClass": "storage.App",
+            "projectName": "storage-ms"
+        },
     ],
     "compounds": [
         {
             "name": "All services",
-            "configurations": ["session-ms","account-ms"]
+            "configurations": [
+                "session-ms",
+                "account-ms",
+                "content-add-event-ms",
+                "content-on-hot-event-ms",
+                "document-draft-ms",
+                "document-ms",
+                "document-publish-ms",
+                "storage-ms"
+            ]
         }
     ]
 }
